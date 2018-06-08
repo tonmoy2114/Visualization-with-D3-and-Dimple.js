@@ -18,8 +18,8 @@ body {font-family: "Roboto", sans-serif}
   <a class="w3-bar-item w3-button w3-border-bottom w3-large" href="#"><img src="images/logo.png" style="width:80%;"></a>
   <a class="w3-bar-item w3-button w3-hide-large w3-large" href="javascript:void(0)" onclick="w3_close()">Close <i class="fa fa-remove"></i></a>
   <a class="w3-bar-item w3-button" href="index.html">Home</a>
-  <a class="w3-bar-item w3-button w3-teal" href="barchart1.html">Bar Chart</a>
-  <a class="w3-bar-item w3-button" href="barchart2.html">Bar Chart 2</a>
+  <a class="w3-bar-item w3-button" href="barchart1.html">Bar Chart</a>
+  <a class="w3-bar-item w3-button w3-teal" href="barchart2.html">Bar Chart 2</a>
   <a class="w3-bar-item w3-button" href="#">Scatter Charts</a>
   <a class="w3-bar-item w3-button" href="#">Bubble Charts</a>
   <a class="w3-bar-item w3-button" href="#">Pie Charts</a>
@@ -51,10 +51,6 @@ body {font-family: "Roboto", sans-serif}
 <h2>Bar Chart</h2>
 
 <p>I have used football world cup dataset for this graph. the x-axis represents the year and y-axis represent the attendance of supporter in the stadium</p>
-<h3>Data set</h3>
-<img src="images/data_image.png" style="width:80%" alt="Responsive">
-
-<br>
 
 <div id="barChartContainer">
   <script type="text/javascript">
@@ -63,16 +59,15 @@ body {font-family: "Roboto", sans-serif}
       var myChart = new dimple.chart(svg, data);
       myChart.setBounds(60, 30, 710, 405)
       var x = myChart.addCategoryAxis("x", "year");
+      //x.addOrderRule("Date");
       myChart.addMeasureAxis("y", "attendance");
-      myChart.addSeries(null, dimple.plot.bar);
+      myChart.addSeries("stage", dimple.plot.bar);
       myChart.addLegend(160, 10, 510, 20, "right");
-      myChart.defaultColors = [
-	new dimple.color("#4CAF50") // You can use #RGB here
-	];
       myChart.draw();
     });
   </script>
 </div>
+
 
  
 </div>
