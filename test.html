@@ -1,0 +1,48 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/style.css">
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+  <script type="text/javascript">
+    function draw(data) {
+    var svg = dimple.newSvg("#barChartContainer", 2900, 800);
+    // Create and Position a Chart
+    var myChart = new dimple.chart(svg, data);
+    myChart.setBounds(60, 30, 2000, 700);
+    var x = myChart.addCategoryAxis("x", "time")
+	x.addOrderRule("time",false);
+	x.categoryInterval = 10;
+    var y = myChart.addMeasureAxis("y", "value");
+	data.forEach(function(d) {
+		d.value = +d.value;
+	});
+	var minValue = d3.min(data, function(d) { return d.value; });
+	var maxValue = d3.max(data, function(d) { return d.value; });
+	//document.write("Min: "+minValue+" Max : "+ maxValue);
+	var adjust = 10;
+	y.overrideMin = minValue - adjust;
+	y.overrideMax = maxValue + adjust;
+
+    // Min price will be green, middle price yellow and max red
+    myChart.addColorAxis("value", ["green", "yellow", "red"]);
+
+    // Add a thick line with markers
+    var lines = myChart.addSeries(null, dimple.plot.line);
+    lines.lineWeight = 3;
+    lines.lineMarkers = true;
+    // Draw the chart
+    myChart.draw();
+    };
+  </script>
+</head>
+
+<body>
+	<div id="barChartContainer">
+	  <script type="text/javascript">
+		d3.csv("heartrate2.csv", draw);
+	  </script>
+	</div>
+</body>
+
+
+</html>
