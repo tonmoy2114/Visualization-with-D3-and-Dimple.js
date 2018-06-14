@@ -52,22 +52,44 @@ $('#nav-placeholder').load(
     <div class="w3-container" style="padding:32px">
 
       <h2>Heartrate Chart</h2>
+<div id="lineChartContainer">
+<script>
+$(function(){
 
-      <div id="lineChartContainer2">
+   $("#lineChartContainer div").on('scroll', function(e) { 
+        var ele = $(e.currentTarget);
+        var left = ele.scrollLeft();
+     	var top = ele.scrollTop();
+     	if (ele.attr("id") === 'D1') {
+          	$("#D2").scrollTop(top);
+          	$("#D2").scrollLeft(left);
+        } else {
+          	$("#D1").scrollTop(top);
+          	$("#D1").scrollLeft(left);
+        }
+   });
+});
+</script>
+
+      <div id="D1">
         <script type="text/javascript">
           function draw(data) {
-            var svg = dimple.newSvg("#lineChartContainer2", 21000, 540);
-	svg.append("rect")
-      .attr("x", 60)
-	.attr("y", 318)
-      .attr("width", 20000)
-      .attr("height", 88)
-.attr("fill", "green")
-.attr("opacity", ".2")
+            var days = ["D1","D2"]
+
+            for(var i=0;i<days.length; i++)
+{
+            var svg = dimple.newSvg("#"+days[i], 41000, 260);
+            svg.append("rect")
+            .attr("x", 60)
+            .attr("y", 318)
+            .attr("width", 20000)
+            .attr("height", 88)
+            .attr("fill", "green")
+            .attr("opacity", ".2")
             // Create and Position a Chart
-		data = dimple.filterData(data, "day", "D1");
-            var myChart = new dimple.chart(svg, data);
-            myChart.setBounds(60, 30, 20000, 440);
+            m_data = dimple.filterData(data, "day", days[i]);
+            var myChart = new dimple.chart(svg, m_data);
+            myChart.setBounds(60, 30, 40800, 160);
             var x = myChart.addCategoryAxis("x", "time")
             x.addOrderRule("time", false);
             x.categoryInterval = 10;
@@ -75,13 +97,12 @@ $('#nav-placeholder').load(
             var z = myChart.addMeasureAxis("z", "stress");
             var y2 = myChart.addMeasureAxis("y", "steps");
 
-
-            data.forEach(function (d) {
+            m_data.forEach(function (d) {
               d.heartrate = +d.heartrate;
               d.steps = +d.steps;
             });
-            var minValue = d3.min(data, function (d) { return d.steps; });
-            var maxValue = d3.max(data, function (d) { return d.steps; });
+            var minValue = d3.min(m_data, function (d) { return d.steps; });
+            var maxValue = d3.max(m_data, function (d) { return d.steps; });
             //document.write("Min: "+minValue+" Max : "+ maxValue);
             var adjust = 10;
             y.overrideMin = 50;
@@ -98,10 +119,14 @@ $('#nav-placeholder').load(
             lines.lineMarkers = true;
             // Draw the chart
             myChart.draw();
+}
           };
           d3.csv("data/HR_Steps.csv", draw);
         </script>
       </div>
+      <div id="D2">
+      </div>
+</div>
 
 
 
@@ -148,7 +173,7 @@ $('#nav-placeholder').load(
           x.previousElementSibling.className.replace(" w3-theme", "");
       }
     }
-    myAccordion('demo');
+    //myAccordion('demo');
   </script>
 
 </body>

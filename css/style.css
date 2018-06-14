@@ -22,10 +22,17 @@ code{
     border: 0;
 	font-family: "SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace;
 }
-
-#lineChartContainer2 { 
-overflow-x :scroll;
+#lineChartContainer{
 max-width:1200px;
+}
+
+#lineChartContainer div{
+ 	width:100%;
+overflow-x :scroll;
+width:100%;
+    overflow-x:scroll;
+    overflow-y:hidden;
+    white-space:nowrap;
 }
 
 * {
