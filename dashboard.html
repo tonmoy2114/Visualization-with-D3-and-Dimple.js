@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<title>Visualization with D3 - Dimple.js</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+<link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet" href="css/w3-theme-teal.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  body {
+    font-family: "Roboto", sans-serif
+  }
+
+  .w3-bar-block .w3-bar-item {
+    padding: 16px;
+    font-weight: bold
+  }
+  
+  .tick {
+      visibility:hidden;
+    }
+    
+</style>
+
+<body>
+
+<div id="nav-placeholder">
+<script>
+$('#nav-placeholder').load(
+    "myNavigation.html",
+    function(){
+        $('#nav-dashboard').addClass( "w3-teal" );
+myAccordion('demo');
+    }
+);
+
+</script>
+</div>
+
+  <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" id="myOverlay"></div>
+
+  <div class="w3-main" style="margin-left:250px;">
+
+    <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+      <p>
+        <i class="fa fa-bars w3-button w3-teal w3-hide-large w3-xlarge" onclick="w3_open()"></i>
+        <span id="myIntro" class="w3-hide">Visualization with D3 - Dimple.js</span>
+      </p>
+    </div>
+
+    <header class="w3-container w3-theme" style="padding:64px 32px">
+      <h1 class="w3-xxxlarge">Visualization with D3 - Dimple.js</h1>
+    </header>
+
+    <div class="w3-container" style="padding:32px">
+
+      <h2>Dash Board</h2>
+
+      <div id="simpleLineChartContainer">
+        <script type="text/javascript">
+         var cleanAxis;
+          function draw(data) {
+          
+          cleanAxis = function (axis, oneInEvery) {
+    // This should have been called after draw, otherwise do nothing
+			if (axis.shapes.length > 0) {
+				// Leave the first label
+				var del = 0;
+				// If there is an interval set
+				if (oneInEvery > 1) {
+				    // Operate on all the axis text
+				    axis.shapes.selectAll("text").each(function (d) {
+				        d3.select(this).attr("opacity", 1);
+				        // Remove all but the nth label
+				        if (del % oneInEvery !== 0) {
+				            d3.select(this).attr("opacity", 0);
+				        }
+				        del += 1;
+				    });
+				}
+			}
+		};
+          
+            var svg = dimple.newSvg("#simpleLineChartContainer", 800, 180);
+            // Create and Position a Chart
+            var myChart = new dimple.chart(svg, data);
+            myChart.setBounds(60, 0, 710, 170)
+            var x = myChart.addCategoryAxis("x", "time");
+            x.addOrderRule("time", false);
+            var y = myChart.addMeasureAxis("y", "heartrate");
+           // y.overrideMin = 40;
+            var s = myChart.addSeries(null, dimple.plot.line);
+            s.afterDraw = function () { cleanAxis(x, 10); };
+           // myChart.addLegend(160, 10, 310, 20, "right");
+            myChart.defaultColors = [
+				new dimple.color("#000000")
+			]; 
+            myChart.draw();
+          };
+          
+          d3.csv("ecg.csv", draw);
+        </script>
+      </div>
+      <div id="curvyLineChartContainer">
+        <script type="text/javascript">
+          function draw(data) {
+            var svg = dimple.newSvg("#curvyLineChartContainer", 800, 180);
+            // Create and Position a Chart
+            var myChart = new dimple.chart(svg, data);
+            myChart.setBounds(60, 0, 710, 170)
+            var x = myChart.addCategoryAxis("x", "time");
+            x.addOrderRule("time", false);
+            var y = myChart.addMeasureAxis("y", "breath");
+            y.overrideMin = 0;
+            var s = myChart.addSeries(null, dimple.plot.line);
+            s.afterDraw = function () { cleanAxis(x, 10); };
+            s.interpolation = "cardinal";
+            //myChart.addLegend(160, 10, 510, 20, "right");
+            myChart.defaultColors = [
+				new dimple.color("#ff0000")
+			]; 
+            myChart.draw();
+          };
+          d3.csv("breath.csv", draw);
+        </script>
+      </div>
+
+	<div id="barChartContainer">
+        <script type="text/javascript">
+          var svg = dimple.newSvg("#barChartContainer", 800, 180);
+          d3.csv("speech.csv", function (data) {
+            var myChart = new dimple.chart(svg, data);
+            myChart.setBounds(60, 0, 710, 170)
+            var x = myChart.addMeasureAxis("x", "value");
+            x.addOrderRule("order", true);
+            //x.addOrderRule("Date");
+            var y= myChart.addCategoryAxis("y", "speech");
+            y.overrideMax = 1.5;
+            myChart.addSeries("slot", dimple.plot.bar);
+            //myChart.addLegend(160, 10, 510, 20, "right");
+            myChart.defaultColors = [
+				new dimple.color("#ffffff"),
+				new dimple.color("#000000"),
+				new dimple.color("#ffffff"),
+				new dimple.color("#000000"),
+				new dimple.color("#ffffff"),
+				new dimple.color("#000000"),
+				new dimple.color("#ffffff"),
+				new dimple.color("#000000"),
+				new dimple.color("#ffffff"),
+				new dimple.color("#000000"),
+				new dimple.color("#ffffff"),
+				new dimple.color("#000000"),
+				new dimple.color("#ffffff")
+			]; 
+            
+            myChart.draw();
+          });
+        </script>
+      </div>
+
+
+    </div>
+
+    <footer class="w3-container w3-theme footer" style="padding:32px" position="fixed">
+      <p>Footer information goes here</p>
+    </footer>
+
+  </div>
+
+  <script>
+    // Open and close the sidebar on medium and small screens
+    function w3_open() {
+      document.getElementById("mySidebar").style.display = "block";
+      document.getElementById("myOverlay").style.display = "block";
+    }
+    function w3_close() {
+      document.getElementById("mySidebar").style.display = "none";
+      document.getElementById("myOverlay").style.display = "none";
+    }
+
+    // Change style of top container on scroll
+    window.onscroll = function () { myFunction() };
+    function myFunction() {
+      if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        document.getElementById("myTop").classList.add("w3-card-4", "w3-animate-opacity");
+        document.getElementById("myIntro").classList.add("w3-show-inline-block");
+      } else {
+        document.getElementById("myIntro").classList.remove("w3-show-inline-block");
+        document.getElementById("myTop").classList.remove("w3-card-4", "w3-animate-opacity");
+      }
+    }
+
+    // Accordions
+    function myAccordion(id) {
+      var x = document.getElementById(id);
+      if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+        x.previousElementSibling.className += " w3-theme";
+      } else {
+        x.className = x.className.replace("w3-show", "");
+        x.previousElementSibling.className =
+          x.previousElementSibling.className.replace(" w3-theme", "");
+      }
+    }
+  </script>
+
+</body>
+
+</html>
